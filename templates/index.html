@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face and Outfit Suggestion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: yellow;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><text x="50" y="100" fill="rgba(0,0,0,0.05)" font-size="20" font-family="Arial">outfit_suggestions</text></svg>');
+            background-repeat: repeat;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: red;
+        }
+        .container {
+            max-width: 600px;
+            background-color: burlywood;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(77, 130, 45, 0.1);
+            border-radius: 10px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        select, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid red;
+        }
+        button {
+            background-color: red;
+            color: white;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #result img, #dominantColor {
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            margin: 10px;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+        }
+        .dominantColorLabel {
+            font-size: 20px;
+            color: red;
+            margin-top: -10px;
+            background-color: yellow;
+            padding: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        #outfitSuggestions {
+            margin-top: 20px;
+            background-color: red; /* Changed background color to red */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px pink;
+        }
+        #outfitText {
+            font-size: 18px;
+            font-weight: bold;
+            color: yellow; /* Changed font color to yellow */
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Detection and Outfit Suggestions</h1>
+    <div class="container">
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="image" name="image" accept="image/*" required>
+            <select id="gender" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+            <select id="occasion" name="occasion" required>
+                <option value="">Select Occasion</option>
+                <option value="party">Party</option>
+                <option value="function">Function</option>
+                <option value="college">College</option>
+                <option value="marriage">Marriage</option>
+                <option value="office">Office</option>
+            </select>
+            <button type="submit">Upload Image</button>
+        </form>
+
+        <div id="result" style="display: none;">
+            <!-- Display uploaded image -->
+            <img id="uploadedImage" alt="Uploaded Image">
+            
+            <!-- Display dominant color -->
+            <div id="dominantColor"></div>
+            <p class="dominantColorLabel" id="dominantColorLabel"></p>
+            
+            <!-- Display outfit suggestions -->
+            <div id="outfitSuggestions">
+                <h3>Suggested Outfit:</h3>
+                <p id="outfitText">Dark green shirt, beige trousers, brown shoes.</p> <!-- Added suggested outfit text -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const imageFile = document.getElementById('image').files[0];
+            const gender = document.getElementById('gender').value;
+            const occasion = document.getElementById('occasion').value;
+
+            formData.append('image', imageFile);
+            formData.append('gender', gender);
+            formData.append('occasion', occasion);
+
+            fetch('/upload_file', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('result').style.display = 'block';
+
+                    // Display uploaded image
+                    const uploadedImage = document.getElementById('uploadedImage');
+                    uploadedImage.src = URL.createObjectURL(imageFile);
+
+                    // Display dominant color
+                    const dominantColor = document.getElementById('dominantColor');
+                    const [r, g, b] = data.dominant_color;
+                    dominantColor.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+
+                    // Display dominant color label
+                    const colorLabel = document.getElementById('dominantColorLabel');
+                    colorLabel.textContent = `Dominant color is: ${data.rf_prediction}`;
+
+                    // Display outfit suggestions
+                    document.getElementById('outfitText').textContent = data.outfit_suggestions;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Something went wrong!');
+            });
+        });
+    </script>
+</body>
+</html>
