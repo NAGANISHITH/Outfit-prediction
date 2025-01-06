@@ -68,7 +68,7 @@
         }
         #outfitSuggestions {
             margin-top: 20px;
-            background-color: red; /* Changed background color to red */
+            background-color: red;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 4px pink;
@@ -76,7 +76,7 @@
         #outfitText {
             font-size: 18px;
             font-weight: bold;
-            color: yellow; /* Changed font color to yellow */
+            color: yellow;
         }
     </style>
 </head>
@@ -98,6 +98,13 @@
                 <option value="marriage">Marriage</option>
                 <option value="office">Office</option>
             </select>
+            <select id="season" name="season" required>
+                <option value="">Select Season</option>
+                <option value="summer">Summer</option>
+                <option value="winter">Winter</option>
+                <option value="spring">Spring</option>
+                <option value="fall">Fall</option>
+            </select>
             <button type="submit">Upload Image</button>
         </form>
 
@@ -112,7 +119,7 @@
             <!-- Display outfit suggestions -->
             <div id="outfitSuggestions">
                 <h3>Suggested Outfit:</h3>
-                <p id="outfitText">Dark green shirt, beige trousers, brown shoes.</p> <!-- Added suggested outfit text -->
+                <p id="outfitText">Dark green shirt, beige trousers, brown shoes.</p>
             </div>
         </div>
     </div>
@@ -125,10 +132,12 @@
             const imageFile = document.getElementById('image').files[0];
             const gender = document.getElementById('gender').value;
             const occasion = document.getElementById('occasion').value;
+            const season = document.getElementById('season').value;
 
             formData.append('image', imageFile);
             formData.append('gender', gender);
             formData.append('occasion', occasion);
+            formData.append('season', season);  // Send the season value
 
             fetch('/upload_file', {
                 method: 'POST',
