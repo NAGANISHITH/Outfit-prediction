@@ -95,6 +95,12 @@ Before starting, ensure you have the following installed:
 <img width="960" alt="op-1" src="https://github.com/user-attachments/assets/c0330957-4d2b-4cd5-852c-54121d86af4f" />
 <img width="960" alt="op-2" src="https://github.com/user-attachments/assets/7fba953e-cefc-47c9-b411-7d826954d0e3" />
 <img width="958" alt="op-3" src="https://github.com/user-attachments/assets/d9c8ea22-e3de-4ac2-90be-c7643c46446e" />
+---
+## Video
+
+
+https://github.com/user-attachments/assets/47772883-63f3-4612-8772-2149c8755c12
+
 
 ---
 ## Live Demo
